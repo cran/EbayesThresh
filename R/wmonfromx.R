@@ -2,15 +2,17 @@
 function(xd, prior = "laplace", a = 0.5, tol = 1e-008, maxits = 20)
 {
 #
-#   Find the monotone marginal maximum likelihood estimate of the mixing weights
-#    for the Laplace prior with parameter a.  It is assumed that the 
-#    noise variance is equal to one.
+#  Find the monotone marginal maximum likelihood estimate of the mixing weights
+#   for the Laplace prior with parameter a.  It is assumed that the 
+#   noise variance is equal to one.
 #
 #  Find the beta values and the minimum weight
+#  
+#  Current version allows for standard deviation of 1 only.
 #
 	pr <- substring(prior, 1, 1)
 	nx <- length(xd)
-	wmin <- wfromt(sqrt(2 * log(length(xd))), prior, a)
+	wmin <- wfromt(sqrt(2 * log(length(xd))), s=1, prior, a)
 	winit <- 1
 	if(pr == "l")
 		beta <- beta.laplace(xd, a)
