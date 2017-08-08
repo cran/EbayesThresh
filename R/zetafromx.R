@@ -1,23 +1,23 @@
-"zetafromx" <-
-function(xd, cs, pilo=NA, prior = "laplace", a = 0.5)
-{
+zetafromx <- function(xd, cs, pilo = NA, prior = "laplace", a = 0.5) {
 #
-#  given a sequence xd, a vector of scale factors cs and
-#  a lower limit pilo, find the marginal maximum likelihood
-#  estimate of the parameter zeta such that the prior prob
-#  is of the form median( pilo, zeta*cs, 1)
+#  Given a sequence xd, a vector of scale factors cs and
+#   a lower limit pilo, find the marginal maximum likelihood
+#   estimate of the parameter zeta such that the prior prob
+#   is of the form median( pilo, zeta*cs, 1)
 #
-#  if pilo=NA then it is calculated according to the sample size
-#  to corrrespond to the universal threshold
+#  If pilo=NA then it is calculated according to the sample size
+#   to corrrespond to the universal threshold
 #  
-#
 #  Find the beta values and the minimum weight if necessary
+#
+#  Current version allows for standard deviation of 1 only.
 #
 	pr <- substring(prior, 1, 1)
 	nx <- length(xd)
-	if (is.na(pilo)) pilo <- wfromt(sqrt(2 * log(length(xd))), prior, a)
+	if (is.na(pilo))
+          pilo <- wfromt(sqrt(2 * log(length(xd))), prior=prior, a=a)
 	if(pr == "l")
-		beta <- beta.laplace(xd, a)
+	  beta <- beta.laplace(xd, a=a)
 	if(pr == "c") beta <- beta.cauchy(xd)
 #
 #  Find jump points zj in derivative of log likelihood as function
@@ -28,11 +28,10 @@ function(xd, cs, pilo=NA, prior = "laplace", a = 0.5)
 	zj <- sort(unique(c(zs1, zs2)))
 	cb <- cs * beta
 	mz <- length(zj)
-	zlmax <- NULL	#
-#  Find left and right derivatives at each zj
-#   and check which are local minima
-#  Check internal zj first
-#
+	zlmax <- NULL
+        
+#  Find left and right derivatives at each zj and check which are
+#  local minima Check internal zj first
 	lmin <- rep(FALSE, mz)
 	for(j in (2:(mz - 1))) {
 		ze <- zj[j]
@@ -53,11 +52,13 @@ function(xd, cs, pilo=NA, prior = "laplace", a = 0.5)
 #
 	cbir <- cb[zj[1] == zs1]
 	rd <- sum(cbir/(1 + zj[1] * cbir))
-	if(rd > 0) lmin[1] <- TRUE	else zlmax <- zj[1]
+	if(rd > 0) lmin[1] <- TRUE else zlmax <- zj[1]
 	cbil <- cb[zj[mz] == zs2]
 	ld <- sum(cbil/(1 + zj[mz] * cbil))
-	if(ld < 0) lmin[mz] <- TRUE else zlmax <- zj[mz]	#
-#  Flag all local minima and do a binary search between them to find the local maxima
+	if(ld < 0) lmin[mz] <- TRUE else zlmax <- zj[mz]
+        
+#  Flag all local minima and do a binary search between them to find
+#  the local maxima
 #
 	zlmin <- zj[lmin]
 	nlmin <- length(zlmin)
@@ -86,6 +87,6 @@ function(xd, cs, pilo=NA, prior = "laplace", a = 0.5)
 	}
 	zeta <- zlmax[zm == max(zm)]
 	zeta <- min(zeta)
-	w <- pmin(1, pmax(zeta*cs, pilo) ) 
+	w <- pmin(1, pmax(zeta*cs, pilo)) 
 	return(list(zeta=zeta, w=w, cs=cs, pilo=pilo))
 }

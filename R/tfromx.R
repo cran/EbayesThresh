@@ -1,17 +1,19 @@
-"tfromx" <-
-function(x, prior = "laplace", bayesfac = FALSE, a = 0.5)
-{
-#  given the data x, the prior, and any other parameters, 
-#   find the threshold
-#   corresponding to the marginal maximum likelihood estimator
-#   of the mixing weight.
+tfromx <- function (x, s = 1, prior = "laplace", bayesfac = FALSE, a = 0.5,
+                    universalthresh = TRUE) {
 #
-	if ( prior=="laplace" && is.na (a) ) 
-	{ wa  <-  wandafromx( x)
+#  Given the data x, the prior, and any other parameters, find the
+#   threshold corresponding to the marginal maximum likelihood
+#   estimator of the mixing weight.
+#
+  pr <- substring(prior, 1, 1)
+  if(pr == "c")
+    s = 1
+  if ( pr=="l" && is.na (a) ) {
+	wa <-  wandafromx(x, s, universalthresh)
 	w  <-  wa$w
 	a  <-  wa$a 
-	}  	else	
-	{w <- wfromx(x, prior, a = a)}
-	t <- tfromw(w, prior, a = a, bayesfac = bayesfac)
-	return(t)
+  } else {
+	w <- wfromx(x, s, prior = prior, a = a)
+  }
+  return(tfromw(w, s, prior = prior, bayesfac = bayesfac, a = a))
 }

@@ -1,5 +1,33 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
+importFrom(stats,dnorm)
+importFrom(stats,pnorm)
+importFrom(stats,qnorm)
+importFrom(stats,mad)
+importFrom(stats,optim)
+importFrom(stats,nlminb)
+importFrom(wavethresh,accessD)
+importFrom(wavethresh,putD)
 
-# Export all names
-exportPattern(".")
+export(beta.cauchy,
+       beta.laplace,
+       ebayesthresh,
+       ebayesthresh.wavelet,
+       isotone,
+       laplace.threshzero,
+       cauchy.threshzero,
+       negloglik.laplace,
+       postmean,
+       postmean.cauchy,
+       postmean.laplace,
+       postmed,
+       postmed.cauchy,
+       postmed.laplace,
+       cauchy.medzero,
+       tfromw,
+       tfromx,
+       threshld,
+       vecbinsolv,
+       wandafromx,
+       wfromt,
+       wfromx,
+       wmonfromx,
+       zetafromx)
